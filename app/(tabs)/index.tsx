@@ -7,10 +7,11 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { getCurrentWeather } from '../../src/services/weather';
+import { getCurrentWeather } from '@/src/services/weather';
 import * as Location from 'expo-location';
-import { weatherConditions } from '../../src/weatherConditions';
-import { backgrounds } from '../../src/backgrounds';
+import { weatherConditions } from '@/src/weatherConditions';
+import { backgrounds } from '@/src/backgrounds';
+import { getWeatherAdvice } from '@/src/adviceLogicEngine';
 
 
 
@@ -20,7 +21,7 @@ export default function HomeScreen() {
   const [condition, setCondition] = useState<string | null>(null);
   const [conditionIcon,setConditionIcon] = useState<string | null>(null);
   const [conditionCode, setConditionCode] = useState<number | null>(null);
-
+  const [advice, setAdvice] = useState<string>("");
   useEffect(() => {
     async function loadWeather() {
       let latitude = 40.7128;
@@ -47,6 +48,7 @@ export default function HomeScreen() {
         
         setCondition(weatherConditions[conditionCode]?.text ||"Unknown");
         setConditionIcon(weatherConditions[conditionCode]?.icon ||"❓");
+        setAdvice(getWeatherAdvice(code, fahrenheit));
       }
       catch (err){
         console.error(err);
@@ -74,6 +76,7 @@ export default function HomeScreen() {
       {!loading && condition && (<Text style={styles.condition}>
         {conditionIcon} {condition}
       </Text>)}
+      {!loading &&(<Text style={styles.advice}>{advice}</Text>)}
     </View>
     </ImageBackground>
     
@@ -100,5 +103,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'white',
     marginTop: 8,
+  },
+  advice:{
+    marginTop:20,
+    fontSize:18,
+    color: 'white',
+    textAlign:'center',
+    paddingHorizontal:30,
   },
 });

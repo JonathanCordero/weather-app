@@ -1,4 +1,4 @@
-export const weatherConditions: Record<string, {text:string; icon:string}> ={
+export const weatherConditions: Record<number, {text:string; icon:string}> ={
     1000: {text: "clear", icon:"☀️"},
     1100:{text:"mostly clear", icon:"🌤️"},
     1101:{text:"partly cloudy",icon:"⛅"},
